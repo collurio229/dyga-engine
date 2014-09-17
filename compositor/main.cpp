@@ -1,5 +1,5 @@
-#include "Property.h"
-#include "Visitor.h"
+#include "Property.hpp"
+#include "Visitor.hpp"
 
 using namespace std;
 
