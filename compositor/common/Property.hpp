@@ -5,7 +5,7 @@
 #include <list>
 #include <atomic>
 
-#include "Visitor.h"
+#include "Visitor.hpp"
 
 /*
  * The Property class acts as a smart type of Variables, which can
