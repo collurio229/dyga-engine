@@ -1,8 +1,8 @@
 #include "SDL.h"
 #include <iostream>
 
-#include "Property.h"
-#include "Visitor.h"
+#include "Property.hpp"
+#include "Visitor.hpp"
 
 class Painter : Visitor<int> {
 public:
