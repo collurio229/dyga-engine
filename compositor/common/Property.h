@@ -3,6 +3,8 @@
 
 #include <iostream>
 #include <list>
+#include <atomic>
+
 #include "Visitor.h"
 
 /*
@@ -29,7 +31,7 @@ public:
 	 * Property of the same type, to distinguish between those
 	 */
 	Property(T value, std::string id = "")
-		: value_(value) {}
+		: value_(value), id_(id) {}
 
 	/*
 	 * Destructor.
@@ -64,7 +66,7 @@ public:
 	/*
 	 * Returns saved value.
 	 */
-	T get()
+	std::atomic<T> get()
 	{
 		return value_;
 	}
@@ -92,8 +94,7 @@ public:
 	 * Unsubscribe Visitor from the Property.
 	 * The method simply erases the list element represented from the Visitor_ID iterator.
 	 */
-	void unsubscribe(Visitor_ID id)
-	{
+	void unsubscribe(Visitor_ID id) {
 		// All other iterators aren't changed from deleting an element from the list
 		visitors_.erase(id);
 	}
@@ -109,7 +110,8 @@ public:
 	}
 
 private:
-	T value_;
+	// The stored value should be threadsafe
+	std::atomic<T> value_;
 	std::list<Visitor<T>*> visitors_;
 	std::string id_;
 };

@@ -4,8 +4,6 @@
 #include "Property.h"
 #include "Visitor.h"
 
-using namespace std;
-
 class Painter : Visitor<int> {
 public:
 	Painter();
@@ -24,6 +22,8 @@ public:
 	 */
 	Property<int> width_;
 	Property<int> height_;
+	// Set this to false to stop the Graphics loop
+	Property<bool> running_;
 
 	/*
 	 * This function is called if one of the int properties changes,
@@ -37,5 +37,9 @@ private:
 	 */
 	void run();
 
+	// the SDL_Window variable
 	SDL_Window* window_;
+
+	// variable for the Graphics loop execution thread
+	std::thread* loop_;
 };

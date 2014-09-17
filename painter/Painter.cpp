@@ -5,12 +5,12 @@
 Painter::Painter()
 : width(640, "width"), height(480, "height")
 {
-	width.subscribe(this);
-	height.subscribe(this);
+	width_.subscribe(this);
+	height_.subscribe(this);
 }
 
 Painter::Painter(int height, int width)
-: width(width, "width"), height(height, "height")
+: width_(width, "width"), height_(height, "height")
 {
 	width.subscribe(this);
 	height.subscribe(this);
@@ -31,7 +31,8 @@ void Painter::start()
 	//TODO ERROR HANDLING
 	}
 
-	std::thread(run);
+	running_.set(true);
+	loop_ = new std::thread(run);
 }
 
 void Painter::call(Property<int>* prop)
@@ -40,12 +41,25 @@ void Painter::call(Property<int>* prop)
 	{
 	case "height":
 	case "width":
-		SDL_SetWindowSize(window_, width, height);
+		SDL_SetWindowSize(window_, width_, height_);
 		break;
 	}
 }
 
 void Painter::run()
 {
+	while(running_)
+	{
 
+	}
+}
+
+void Painter::stop()
+{
+	running_ = false;
+
+	loop_->join();
+	delete loop_;
+
+	SDL_DestroyWindow(window_);
 }
