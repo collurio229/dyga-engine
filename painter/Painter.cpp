@@ -3,7 +3,7 @@
 #include "Painter.h"
 
 Painter::Painter()
-: width(640, "width"), height(480, "height")
+: width_(640, "width"), height_(480, "height")
 {
 	width_.subscribe(this);
 	height_.subscribe(this);
@@ -12,8 +12,8 @@ Painter::Painter()
 Painter::Painter(int height, int width)
 : width_(width, "width"), height_(height, "height")
 {
-	width.subscribe(this);
-	height.subscribe(this);
+	width_.subscribe(this);
+	height_.subscribe(this);
 }
 
 Painter::~Painter()
@@ -22,27 +22,31 @@ Painter::~Painter()
 
 void Painter::start()
 {
-	SDL_init(SDL_INIT_VIDEO);
+	if(SDL_init(SDL_INIT_VIDEO) != 0)
+	{
+		std::cout << "Unable to initialize SDL: " << std::endl << SDL_GetError();
+		//TODO Create useful exceptions
+		throw;
+	}
 
 	window_ = SDL_CreateWindow();
 
 	if (window_ == NULL)
 	{
 	//TODO ERROR HANDLING
+		std::cout << "Unable to create SDL window: " << std::endl << SDL_GetError();
+		throw;
 	}
 
-	running_.set(true);
-	loop_ = new std::thread(run);
+	running_ = true;
+	loop_ = std::thread(&Painter::run, this);
 }
 
 void Painter::call(Property<int>* prop)
 {
-	switch(prop->getId())
+	if (prop->getId() == "height" or prop->getId() == "width")
 	{
-	case "height":
-	case "width":
 		SDL_SetWindowSize(window_, width_, height_);
-		break;
 	}
 }
 
@@ -58,8 +62,9 @@ void Painter::stop()
 {
 	running_ = false;
 
-	loop_->join();
-	delete loop_;
+	loop_.join();
 
 	SDL_DestroyWindow(window_);
+
+	SDL_Quit();
 }

@@ -22,3 +22,7 @@
 
 # All build folders
 build/*
+
+# editor files
+*.swp
+*~

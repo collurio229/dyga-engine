@@ -1,4 +1,8 @@
+#ifndef PAINTER_DYGA_H
+#define PAINTER_DYGA_H
+
 #include "SDL.h"
+#include "SDL_video.h"
 #include <iostream>
 
 #include "Property.hpp"
@@ -14,6 +18,11 @@ public:
 	 * Starts the SDL window and the Graphics loop thread.
 	 */
 	void start();
+
+	/*
+	 * Stops the SDL window and the Graphics loop thread.
+	 */
+	void stop();
 
 	/*
 	 * These are the public properties of the painter class, which
@@ -41,5 +50,7 @@ private:
 	SDL_Window* window_;
 
 	// variable for the Graphics loop execution thread
-	std::thread* loop_;
+	std::thread loop_;
 };
+
+#endif // PAINTER_DYGA_H
