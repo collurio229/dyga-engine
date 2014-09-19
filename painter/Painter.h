@@ -3,6 +3,8 @@
 
 #include "SDL.h"
 #include "SDL_video.h"
+#include "SDL_error.h"
+
 #include <iostream>
 
 #include "Property.hpp"
@@ -11,7 +13,7 @@
 class Painter : Visitor<int> {
 public:
 	Painter();
-	Painter(int width, int height);
+	Painter(int width, int height, std::string title);
 	virtual ~Painter();
 
 	/*
@@ -34,12 +36,15 @@ public:
 	// Set this to false to stop the Graphics loop
 	Property<bool> running_;
 
+	Property<std::string> title_;
+
 	/*
 	 * This function is called if one of the int properties changes,
 	 * and the SDL_window is changed accordingly
 	 */
 	void call(Property<int>* prop);
 
+	void call(Property<std::string>* name);
 private:
 	/*
 	 * This function represents the graphics loop.

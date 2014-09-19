@@ -58,7 +58,7 @@ public:
 	 */
 	operator T() const volatile
 	{
-		return value_;
+		return value_.load();
 	}
 
 	/*
@@ -66,7 +66,7 @@ public:
 	 */
 	void set(T new_val)
 	{
-		value_ = new_val;
+		value_.store(new_val);
 
 		update_();
 	}
@@ -74,9 +74,9 @@ public:
 	/*
 	 * Returns saved value.
 	 */
-	std::atomic<T> get()
+	T get()
 	{
-		return value_;
+		return value_.load();
 	}
 
 	/*
