@@ -4,7 +4,7 @@ project (dyga-engine)
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
-find_package(Boost COMPONENTS filesystem system date_time python REQUIRED)
+find_package(Boost COMPONENTS filesystem system date_time python3 REQUIRED)
 message("Include dirs of boost: " ${Boost_INCLUDE_DIRS} )
 message("Libs of boost: " ${Boost_LIBRARIES} )
 
