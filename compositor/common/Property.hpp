@@ -30,8 +30,10 @@ public:
 	 * The ID should be used, if a Visitor subscribes to more than one
 	 * Property of the same type, to distinguish between those
 	 */
-	Property(T value = NULL, std::string id = "")
+	Property(T value, std::string id = "")
 		: value_(value), id_(id) {}
+
+	Property() : value_(NULL), id_("") {}
 
 	/*
 	 * Destructor.

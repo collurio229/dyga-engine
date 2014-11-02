@@ -2,6 +2,8 @@ cmake_minimum_required(VERSION 2.8)
 
 project (dyga-engine)
 
+add_subdirectory(gtest-1.7.0)
+
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
 find_package(Boost COMPONENTS filesystem system date_time python3 REQUIRED)
@@ -23,15 +25,21 @@ include_directories(
 	${PROJECT_SOURCE_DIR}/compositor/python
 	${PROJECT_SOURCE_DIR}/compositor/common
 	${PROJECT_SOURCE_DIR}/painter
+	${gtest_SOURCE_DIR}/include
+)
+
+set(test_sources
+	test/main_test.cpp
+	test/compositor_common_test.cpp
 )
 
 add_library(painter STATIC painter/Painter.cpp)
 
-add_executable(dyga compositor/main.cpp)
-
 target_link_libraries(painter
 	${SDL2_LIBRARY}
 )
+
+add_executable(dyga compositor/main.cpp)
 
 target_link_libraries(dyga
     ${Boost_LIBRARIES}
@@ -39,3 +47,7 @@ target_link_libraries(dyga
 	${SDL2_LIBRARIES}
 	painter
 )
+
+add_executable(test_all ${test_sources})
+
+target_link_libraries(test_all gtest_main)
