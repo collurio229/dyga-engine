@@ -10,7 +10,7 @@
 #include "Property.hpp"
 #include "Visitor.hpp"
 
-class Painter : Visitor<int> {
+class Painter : Visitor<int>, Visitor<std::string> {
 public:
 	Painter();
 	Painter(int width, int height, std::string title);

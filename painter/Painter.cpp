@@ -14,6 +14,7 @@ Painter::Painter(int height, int width, std::string title)
 {
 	width_.subscribe(this);
 	height_.subscribe(this);
+	title_.subscribe(this);
 }
 
 Painter::~Painter()
