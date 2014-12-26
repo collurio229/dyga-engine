@@ -1,16 +1,15 @@
-#include <thread>
-
 #include "Painter.h"
 
 Painter::Painter()
-: width_(640, "width"), height_(480, "height"), title_("dyga created", "Title")
+: width_(640, "width"), height_(480, "height"), title_("dyga created", "Title"), controller()
 {
 	width_.subscribe(this);
 	height_.subscribe(this);
+	title_.subscribe(this);
 }
 
 Painter::Painter(int height, int width, std::string title)
-: width_(width, "width"), height_(height, "height"), title_(title, "Title")
+: width_(width, "width"), height_(height, "height"), title_(title, "Title"), controller()
 {
 	width_.subscribe(this);
 	height_.subscribe(this);
@@ -33,8 +32,8 @@ void Painter::start()
 	window_ = SDL_CreateWindow(title_.get().c_str(),
 		SDL_WINDOWPOS_UNDEFINED,
 		SDL_WINDOWPOS_UNDEFINED,
-		width_,
 		height_,
+		width_,
 		SDL_WINDOW_OPENGL);
 
 	if (window_ == NULL)

@@ -6,9 +6,11 @@
 #include "SDL_error.h"
 
 #include <iostream>
+#include <thread>
 
 #include "Property.hpp"
 #include "Visitor.hpp"
+#include "Controller.hpp"
 
 class Painter : Visitor<int>, Visitor<std::string> {
 public:
@@ -38,6 +40,9 @@ public:
 
 	Property<std::string> title_;
 
+	// Controller for SDL events
+	Controller controller;
+	
 	/*
 	 * This function is called if one of the int properties changes,
 	 * and the SDL_window is changed accordingly

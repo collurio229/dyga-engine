@@ -3,7 +3,7 @@
 
 #include <iostream>
 #include <list>
-#include <atomic>
+#include <mutex>
 
 #include "Visitor.hpp"
 
@@ -35,6 +35,10 @@ public:
 
 	Property() : value_(NULL), id_("") {}
 
+	Property(Property<T>& prop) : value_(prop.get()), id_(prop.getId())
+	{
+	}
+
 	/*
 	 * Destructor.
 	 */
@@ -60,15 +64,18 @@ public:
 	 */
 	operator T() const volatile
 	{
-		return value_.load();
+		return value_;
 	}
+
 
 	/*
 	 * Sets a new value and calls als subscribed Visitors.
 	 */
 	void set(T new_val)
 	{
-		value_.store(new_val);
+		mtx_.lock();
+		value_ = new_val;
+		mtx_.unlock();
 
 		update_();
 	}
@@ -78,7 +85,11 @@ public:
 	 */
 	T get()
 	{
-		return value_.load();
+		mtx_.lock();
+		T ret(value_);
+		mtx_.unlock();
+
+		return ret;
 	}
 
 	/*
@@ -86,7 +97,11 @@ public:
 	 */
 	std::string getId()
 	{
-		return id_;
+		mtx_.lock();
+		std::string s(id_);
+		mtx_.unlock();
+		
+		return s;
 	}
 
 	/*
@@ -95,9 +110,12 @@ public:
 	 */
 	Visitor_ID subscribe(Visitor<T>* visitor)
 	{
+		mtx_.lock();
 		visitors_.push_front(visitor);
+		Visitor_ID id = visitors_.begin();
+		mtx_.unlock();
 
-		return visitors_.begin();
+		return id;
 	}
 
 	/*
@@ -106,7 +124,9 @@ public:
 	 */
 	void unsubscribe(Visitor_ID id) {
 		// All other iterators aren't changed from deleting an element from the list
+		mtx_.lock();
 		visitors_.erase(id);
+		mtx_.unlock();
 	}
 
 	/*
@@ -121,9 +141,10 @@ public:
 
 private:
 	// The stored value should be threadsafe
-	std::atomic<T> value_;
+	T value_;
 	std::list<Visitor<T>*> visitors_;
 	std::string id_;
+	std::mutex mtx_;
 };
 
 #endif // PROPERTY_DYGA_H
